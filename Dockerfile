@@ -1,4 +1,15 @@
-FROM ubuntu:latest
-LABEL authors="raedabdulmajeed"
+FROM golang:latest
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR go/src/app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY . .
+
+WORKDIR ./cmd/api
+
+RUN go build -o app
+
+CMD ["./app"]

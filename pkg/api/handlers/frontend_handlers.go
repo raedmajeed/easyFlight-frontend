@@ -36,7 +36,7 @@ func OnlinePaymentRender(ctx *gin.Context, cf *config.Parameters) {
 	params.Set("bookingRef", bookingRef)
 	params.Set("searchToken", searchToken)
 
-	baseURL := fmt.Sprintf("http://localhost:%v/api/v1/user/booking/confirm/online/payment", cf.BACKENDPORT)
+	baseURL := fmt.Sprintf("http://%v/api/v1/user/booking/confirm/online/payment", cf.BACKENDPORT)
 	reqUrl := baseURL + "?" + params.Encode()
 	response, err := http.Get(reqUrl)
 	if err != nil {
@@ -44,7 +44,7 @@ func OnlinePaymentRender(ctx *gin.Context, cf *config.Parameters) {
 	}
 
 	if response.Status >= "300" {
-		log.Println("error")
+		log.Println("error, status 300+")
 		return
 	}
 
@@ -75,7 +75,7 @@ func OnlinePaymentSuccess(ctx *gin.Context, cf *config.Parameters) {
 	params.Set("booking_reference", bookingReference)
 	params.Set("payment_id", paymentId)
 	params.Set("search_token", token)
-	baseURL := fmt.Sprintf("http://localhost:%v/api/v1/user/booking/confirm/online/payment/success", cf.BACKENDPORT)
+	baseURL := fmt.Sprintf("http://%v/api/v1/user/booking/confirm/online/payment/success", cf.BACKENDPORT)
 
 	reqUrl := baseURL + "?" + params.Encode()
 	response, err := http.Get(reqUrl)
