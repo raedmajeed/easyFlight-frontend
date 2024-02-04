@@ -1,8 +1,9 @@
 package config
 
 import (
-	"fmt"
-	"github.com/spf13/viper"
+	"github.com/joho/godotenv"
+	"log"
+	"os"
 )
 
 type Parameters struct {
@@ -12,14 +13,15 @@ type Parameters struct {
 }
 
 func Config() (*Parameters, error) {
-	viper.SetConfigFile("../../.env")
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("error reading from .env file %v", err.Error())
+	var cfg Parameters
+	if err := godotenv.Load("../../.env"); err != nil {
+		os.Exit(1)
 	}
+	cfg.PORT = os.Getenv("PORT")
+	cfg.SECRETKEY = os.Getenv("SECRETKEY")
+	cfg.BACKENDPORT = os.Getenv("BACKENDPORT")
 
-	var params Parameters
-	if err := viper.Unmarshal(&params); err != nil {
-		return nil, fmt.Errorf("error unmarshalling from .env file %v", err.Error())
-	}
-	return &params, nil
+	log.Println(cfg)
+
+	return &cfg, nil
 }
