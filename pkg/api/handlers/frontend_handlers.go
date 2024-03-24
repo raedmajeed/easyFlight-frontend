@@ -36,11 +36,15 @@ func OnlinePaymentRender(ctx *gin.Context, cf *config.Parameters) {
 	params.Set("bookingRef", bookingRef)
 	params.Set("searchToken", searchToken)
 
-	baseURL := fmt.Sprintf("http://%v/api/v1/user/booking/confirm/online/payment", cf.BACKENDPORT)
+	//baseURL := fmt.Sprintf("http://%s/api/v1/user/booking/confirm/online/payment", cf.BACKENDPORT)
+	baseURL := "http://api-service:8080/api/v1/user/booking/confirm/online/payment"
+
 	reqUrl := baseURL + "?" + params.Encode()
 	response, err := http.Get(reqUrl)
 	if err != nil {
+		log.Println(err.Error())
 		ctx.HTML(http.StatusBadRequest, "failed.html", gin.H{})
+		return
 	}
 
 	if response.Status >= "300" {
@@ -51,11 +55,13 @@ func OnlinePaymentRender(ctx *gin.Context, cf *config.Parameters) {
 	byteVal, err := io.ReadAll(response.Body)
 	if err != nil {
 		ctx.HTML(http.StatusBadRequest, "failed.html", gin.H{})
+		return
 	}
 	defer response.Body.Close()
 	var res Response
 	if err := json.Unmarshal(byteVal, &res); err != nil {
 		ctx.HTML(http.StatusBadRequest, "failed.html", gin.H{})
+		return
 	}
 	ctx.HTML(http.StatusOK, "app.html", gin.H{
 		"bookingRef":  bookingRef,
@@ -75,13 +81,15 @@ func OnlinePaymentSuccess(ctx *gin.Context, cf *config.Parameters) {
 	params.Set("booking_reference", bookingReference)
 	params.Set("payment_id", paymentId)
 	params.Set("search_token", token)
-	baseURL := fmt.Sprintf("http://%v/api/v1/user/booking/confirm/online/payment/success", cf.BACKENDPORT)
+	//baseURL := fmt.Sprintf("%v/api/v1/user/booking/confirm/online/payment/success", cf.BACKENDPORT)
+	baseURL := "http://api-service:8080/api/v1/user/booking/confirm/online/payment/success"
 
 	reqUrl := baseURL + "?" + params.Encode()
 	response, err := http.Get(reqUrl)
 	byteVal, err := io.ReadAll(response.Body)
 	if err != nil {
 		ctx.HTML(http.StatusBadRequest, "failed.html", gin.H{})
+		return
 	}
 	defer response.Body.Close()
 	var res SuccessResponse

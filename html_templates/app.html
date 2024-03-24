@@ -60,8 +60,8 @@
         "image": "https://example.com/your_logo",
         "order_id": "{{.orderid}}", // Correct the variable name
         "handler": function (response) {
-            console.log(response)
-            alert(response.razorpay_payment_id);
+            console.log(response, "helooooooo")
+            alert(response.razorpay_payment_id, "hello");
             verifyPayment(response, userid, orderid, searchToken);
         },
         "prefill": {
@@ -93,7 +93,7 @@
 
     function verifyPayment(response, userid, orderid, searchToken) {
         $.ajax({
-            url: `http://localhost:3030/api/v1/booking/confirm/online/payment/success?booking_reference=${userid}&search_token=${searchToken}&payment_id=${response.razorpay_payment_id}&order_id=${response.razorpay_order_id}&signature=${response.razorpay_signature}&total=${total}`,
+            url: `http://easyflight.social:3030/api/v1/booking/confirm/online/payment/success?booking_reference=${userid}&search_token=${searchToken}&payment_id=${response.razorpay_payment_id}&order_id=${response.razorpay_order_id}&signature=${response.razorpay_signature}&total=${total}`,
             method: 'GET',
             // headers: {
             //     'Authorization': 'Bearer ' + "{{.token}}" // replace 'token' with your actual token
@@ -103,7 +103,7 @@
                 if (data.status) {
                     console.log('Payment success');
                     const id = response.razorpay_payment_id;
-                    window.location.href = `http://localhost:3030/api/v1/booking/confirm/online/payment/success/render?booking_reference=${userid}`;
+                    window.location.href = `http://easyflight.social:3030/api/v1/booking/confirm/online/payment/success/render?booking_reference=${userid}`;
                 } else {
                     console.log('Payment failed');
                     swal({
